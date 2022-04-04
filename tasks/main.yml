@@ -1,0 +1,24 @@
+---
+# tasks file for mysql_db
+  - name: ' Install and Configure Database'
+    apt:
+      name: '{{item}}'
+      state: installed
+    with_items:
+      - mysql-server
+      - mysql-client
+  - name: Start Database Service
+    service:
+      name: mysql
+      state: started
+      enabled: yes
+  - name: Create database and database users
+    community.mysql.mysql_db:
+      name: "{{db_name}}"
+      db_state: present
+  - name: create a database user
+    mysql_user:
+      name: "{{db_user}}"
+      password: "{{db_password}}"
+      priv: '*.*:ALL'
+      state: present
